@@ -5,7 +5,7 @@ class Tempwork < Formula
 
   homepage 'https://github.com/winebarrel/tempwork'
   url "https://github.com/winebarrel/tempwork/releases/download/v#{VERSION}/tempwork-v#{VERSION}-darwin-amd64.gz"
-  sha256 '0d2a22e827a26b3db817879564098baa9d57fee19d575435115494ec995cfa66'
+  sha256 '4f944021c41ef3af6edccb7cca14071e3d3ce13197f6c6d6a130511a376c3b3c'
   version VERSION
   head 'https://github.com/winebarrel/tempwork.git', :branch => 'master'
 
