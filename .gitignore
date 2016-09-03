@@ -1,2 +1,6 @@
 /tempwork
 *.gz
+/debian/tempwork.debhelper.log
+/debian/tempwork.substvars
+/debian/tempwork/
+/debian/files

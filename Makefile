@@ -13,3 +13,6 @@ clean:
 
 package: clean tempwork
 	gzip -c tempwork > tempwork-$(VERSION)-$(GOOS)-$(GOARCH).gz
+
+deb:
+	dpkg-buildpackage -us -uc
