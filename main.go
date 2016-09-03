@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
+	"strings"
 	"tempwork"
 )
 
@@ -15,6 +17,24 @@ func printHelp() {
 	fmt.Println("Usage: tempwork command...")
 }
 
+func expandPath(cmd []string) (expandCmd []string, err error) {
+	expandCmd = make([]string, len(cmd))
+
+	for i, v := range cmd {
+		if v == "." || v == ".." || strings.HasPrefix(v, "./") || strings.HasPrefix(v, "../") {
+			expandCmd[i], err = filepath.Abs(v)
+
+			if err != nil {
+				return
+			}
+		} else {
+			expandCmd[i] = v
+		}
+	}
+
+	return
+}
+
 func main0() (exitCode int) {
 	defer func() {
 		if err := recover(); err != nil {
@@ -22,13 +42,15 @@ func main0() (exitCode int) {
 		}
 	}()
 
+	cmd, err := expandPath(os.Args[1:])
+
 	tw := &tempwork.Tempwork{
 		Out: os.Stdin,
 		Err: os.Stdout,
-		Cmd: os.Args[1:],
+		Cmd: cmd,
 	}
 
-	exitCode, err := tempwork.Run(tw)
+	exitCode, err = tempwork.Run(tw)
 
 	if err != nil {
 		panic(err)
