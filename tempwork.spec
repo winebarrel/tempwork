@@ -2,7 +2,7 @@
 %define  debug_package %{nil}
 
 Name:   tempwork
-Version:  0.1.2
+Version:  0.1.3
 Release:  1%{?dist}
 Summary:  Execute a command in a temporary directory.
 
