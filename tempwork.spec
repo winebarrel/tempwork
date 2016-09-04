@@ -7,7 +7,7 @@ Release:  1%{?dist}
 Summary:  Execute a command in a temporary directory.
 
 Group:    Development/Tools
-License:  Apache License, Version 2.0
+License:  MIT
 URL:    https://github.com/winebarrel/tempwork
 Source0:  %{name}_%{version}.tar.gz
 # https://github.com/winebarrel/tempwork/releases/download/v%{version}/tempwork_%{version}.tar.gz
