@@ -58,6 +58,9 @@ func tempDir(callback func()) {
 		panic(err)
 	}
 
+	os.Setenv("TW_ORIG_DIR", pwd)
+	os.Setenv("TW_TEMP_DIR", tmp)
+
 	callback()
 }
 
