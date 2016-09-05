@@ -30,3 +30,14 @@ $ tempwork bash -c 'echo $TW_ORIG_DIR; echo $TW_TEMP_DIR'
 /Users/winebarrel/work
 /var/folders/xs/_d_q1znn5897kgxx1l8d14vr0000gn/T/tempwork121369379
 ```
+
+```sh
+$ cat ./tmp.sh
+#!/usr/bin/tempwork /bin/bash
+echo hello
+pwd
+
+$ ./tmp.sh
+hello
+/private/var/folders/xc/phct0zx57cgc4z07mkt7pp8w0000gp/T/tempwork708816166
+```
