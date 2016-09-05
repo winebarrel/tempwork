@@ -23,8 +23,7 @@ deb:
 	docker run --name docker-go-pkg-build-ubuntu-trusty -v $(shell pwd):/tmp/src docker-go-pkg-build-ubuntu-trusty make -C /tmp/src deb:docker
 	docker rm docker-go-pkg-build-ubuntu-trusty
 
-deb\:docker:
-	make clean
+deb\:docker: clean
 	export PATH=$$GOROOT/bin:$$PATH ; dpkg-buildpackage -us -uc
 	mv ../tempwork_* pkg/
 
@@ -32,8 +31,7 @@ rpm:
 	docker run --name docker-go-pkg-build-centos6 -v $(shell pwd):/tmp/src docker-go-pkg-build-centos6 make -C /tmp/src rpm:docker
 	docker rm docker-go-pkg-build-centos6
 
-rpm\:docker:
-	make clean
+rpm\:docker: clean
 	cd ../ && tar zcf tempwork.tar.gz src
 	mv ../tempwork.tar.gz /root/rpmbuild/SOURCES/
 	cp tempwork.spec /root/rpmbuild/SPECS/
