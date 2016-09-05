@@ -10,6 +10,11 @@ tempwork: main.go $(SRC)
 
 clean:
 	rm -f tempwork *.gz
+	rm -f pkg/*
+	rm -f debian/tempwork.debhelper.log
+	rm -f debian/tempwork.substvars
+	rm -f debian/files
+	rm -rf debian/tempwork/
 
 package: clean tempwork
 	gzip -c tempwork > tempwork-$(VERSION)-$(GOOS)-$(GOARCH).gz
@@ -19,6 +24,7 @@ deb:
 	docker rm docker-go-pkg-build-ubuntu-trusty
 
 deb\:docker:
+	make clean
 	export PATH=$$GOROOT/bin:$$PATH ; dpkg-buildpackage -us -uc
 	mv ../tempwork_* pkg/
 
@@ -27,6 +33,7 @@ rpm:
 	docker rm docker-go-pkg-build-centos6
 
 rpm\:docker:
+	make clean
 	cd ../ && tar zcf tempwork.tar.gz src
 	mv ../tempwork.tar.gz /root/rpmbuild/SOURCES/
 	cp tempwork.spec /root/rpmbuild/SPECS/
