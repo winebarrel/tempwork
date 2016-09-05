@@ -1,7 +1,7 @@
 require 'formula'
 
 class Tempwork < Formula
-  VERSION = '0.1.3'
+  VERSION = '0.1.4'
 
   homepage 'https://github.com/winebarrel/tempwork'
   url "https://github.com/winebarrel/tempwork/releases/download/v#{VERSION}/tempwork-v#{VERSION}-darwin-amd64.gz"
