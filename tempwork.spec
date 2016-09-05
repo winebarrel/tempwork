@@ -9,14 +9,14 @@ Summary:  Execute a command in a temporary directory.
 Group:    Development/Tools
 License:  MIT
 URL:    https://github.com/winebarrel/tempwork
-Source0:  %{name}_%{version}.tar.gz
+Source0:  %{name}.tar.gz
 # https://github.com/winebarrel/tempwork/releases/download/v%{version}/tempwork_%{version}.tar.gz
 
 %description
 Execute a command in a temporary directory.
 
 %prep
-%setup -q -n %{name}
+%setup -q -n src
 
 %build
 make

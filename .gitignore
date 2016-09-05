@@ -1,5 +1,6 @@
 /tempwork
 *.gz
+/pkg/tempwork*
 /debian/tempwork.debhelper.log
 /debian/tempwork.substvars
 /debian/tempwork/

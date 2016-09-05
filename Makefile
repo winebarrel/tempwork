@@ -15,4 +15,27 @@ package: clean tempwork
 	gzip -c tempwork > tempwork-$(VERSION)-$(GOOS)-$(GOARCH).gz
 
 deb:
-	dpkg-buildpackage -us -uc
+	docker run --name docker-go-pkg-build-ubuntu-trusty -v $(shell pwd):/tmp/src docker-go-pkg-build-ubuntu-trusty make -C /tmp/src deb:docker
+	docker rm docker-go-pkg-build-ubuntu-trusty
+
+deb\:docker:
+	export PATH=$$GOROOT/bin:$$PATH ; dpkg-buildpackage -us -uc
+	mv ../tempwork_* pkg/
+
+rpm:
+	docker run --name docker-go-pkg-build-centos6 -v $(shell pwd):/tmp/src docker-go-pkg-build-centos6 make -C /tmp/src rpm:docker
+	docker rm docker-go-pkg-build-centos6
+
+rpm\:docker:
+	cd ../ && tar zcf tempwork.tar.gz src
+	mv ../tempwork.tar.gz /root/rpmbuild/SOURCES/
+	cp tempwork.spec /root/rpmbuild/SPECS/
+	export PATH=$$GOROOT/bin:$$PATH ; rpmbuild -ba /root/rpmbuild/SPECS/tempwork.spec
+	mv /root/rpmbuild/RPMS/x86_64/tempwork-*.rpm pkg/
+	mv /root/rpmbuild/SRPMS/tempwork-*.src.rpm pkg/
+
+docker\:build\:ubuntu-trusty:
+	docker build -f docker/Dockerfile.ubuntu-trusty -t docker-go-pkg-build-ubuntu-trusty .
+
+docker\:build\:centos6:
+	docker build -f docker/Dockerfile.centos6 -t docker-go-pkg-build-centos6 .
