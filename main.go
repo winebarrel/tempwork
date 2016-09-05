@@ -18,11 +18,18 @@ func printHelp() {
 }
 
 func expandPath(cmd []string) (expandCmd []string, err error) {
-	expandCmd = cmd
-	firstArg := expandCmd[0]
+	expandCmd = make([]string, len(cmd))
 
-	if strings.HasPrefix(firstArg, "./") || strings.HasPrefix(firstArg, "../") {
-		expandCmd[0], err = filepath.Abs(firstArg)
+	for i, v := range cmd {
+		if v == "." || v == ".." || strings.HasPrefix(v, "./") || strings.HasPrefix(v, "../") {
+			expandCmd[i], err = filepath.Abs(v)
+
+			if err != nil {
+				return
+			}
+		} else {
+			expandCmd[i] = v
+		}
 	}
 
 	return
