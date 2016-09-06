@@ -1,6 +1,7 @@
 package tempwork
 
 import (
+	"bufio"
 	"io"
 	"io/ioutil"
 	"os"
@@ -86,8 +87,14 @@ func Run(tw *Tempwork) (exitCode int, err error) {
 		return
 	}
 
-	go io.Copy(tw.Out, outReader)
-	go io.Copy(tw.Err, errReader)
+	outWriter := bufio.NewWriter(tw.Out)
+	defer outWriter.Flush()
+
+	errWriter := bufio.NewWriter(tw.Err)
+	defer errWriter.Flush()
+
+	go io.Copy(outWriter, outReader)
+	go io.Copy(errWriter, errReader)
 
 	tempDir(func() {
 		err = cmd.Start()
