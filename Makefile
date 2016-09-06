@@ -1,4 +1,4 @@
-VERSION=v0.1.4
+VERSION=v0.1.5
 GOOS=$(shell go env GOOS)
 GOARCH=$(shell go env GOARCH)
 RUNTIME_GOPATH=$(GOPATH):$(shell pwd)
@@ -44,3 +44,6 @@ docker\:build\:ubuntu-trusty:
 
 docker\:build\:centos6:
 	docker build -f docker/Dockerfile.centos6 -t docker-go-pkg-build-centos6 .
+
+tag:
+	git tag $(VERSION)
