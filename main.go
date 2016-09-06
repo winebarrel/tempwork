@@ -45,8 +45,6 @@ func main0() (exitCode int) {
 	cmd, err := expandPath(os.Args[1:])
 
 	tw := &tempwork.Tempwork{
-		Out: os.Stdin,
-		Err: os.Stdout,
 		Cmd: cmd,
 	}
 

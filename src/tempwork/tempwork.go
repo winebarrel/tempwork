@@ -1,17 +1,15 @@
 package tempwork
 
 import (
-	"bufio"
 	"io"
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"sync"
 	"syscall"
 )
 
 type Tempwork struct {
-	Out io.Writer
-	Err io.Writer
 	Cmd []string
 }
 
@@ -87,14 +85,18 @@ func Run(tw *Tempwork) (exitCode int, err error) {
 		return
 	}
 
-	outWriter := bufio.NewWriter(tw.Out)
-	defer outWriter.Flush()
+	wg := &sync.WaitGroup{}
+	wg.Add(2)
 
-	errWriter := bufio.NewWriter(tw.Err)
-	defer errWriter.Flush()
+	go func() {
+		io.Copy(os.Stdout, outReader)
+		wg.Done()
+	}()
 
-	go io.Copy(outWriter, outReader)
-	go io.Copy(errWriter, errReader)
+	go func() {
+		io.Copy(os.Stderr, errReader)
+		wg.Done()
+	}()
 
 	tempDir(func() {
 		err = cmd.Start()
@@ -109,6 +111,8 @@ func Run(tw *Tempwork) (exitCode int, err error) {
 			exitCode, err = getExitCode(err)
 		}
 	})
+
+	wg.Wait()
 
 	return
 }
