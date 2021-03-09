@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"os/signal"
 	"sync"
 	"syscall"
 )
@@ -87,6 +88,16 @@ func Run(tw *Tempwork) (exitCode int, err error) {
 
 	wg := &sync.WaitGroup{}
 	wg.Add(2)
+
+	sig := make(chan os.Signal)
+	signal.Notify(sig)
+
+	go func() {
+		for {
+			s := <-sig
+			cmd.Process.Signal(s)
+		}
+	}()
 
 	go func() {
 		io.Copy(os.Stdout, outReader)
