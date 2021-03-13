@@ -1,4 +1,10 @@
-tempwork (0.1.6) unstable; urgency=low
+tempwork (0.1.7) unstable; urgency=low
+
+  * Send signal to child process
+
+ -- Jun Fukaya <fukajun.shark@gmail.com>  Fri Feb 26 21:05:55 2021 +0900
+
+ tempwork (0.1.6) unstable; urgency=low
 
   * Revert: Sync output.
 
