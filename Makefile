@@ -14,6 +14,7 @@ clean:
 	rm -f debian/tempwork.substvars
 	rm -f debian/files
 	rm -rf debian/tempwork/
+	rm -rf debian/.debhelper/
 
 .PHONY: package
 package: clean all
