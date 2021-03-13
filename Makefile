@@ -1,13 +1,12 @@
 VERSION=v0.1.6
 GOOS=$(shell go env GOOS)
 GOARCH=$(shell go env GOARCH)
-RUNTIME_GOPATH=$(GOPATH):$(shell pwd)
-SRC=$(wildcard src/tempwork/*.go)
-BIN=tempwork
 
-tempwork: main.go $(SRC)
-	GOPATH=$(RUNTIME_GOPATH) go build -o $(BIN)
+.PHONY: all
+all:
+	go build ./cmd/tempwork
 
+.PHONY: clean
 clean:
 	rm -f tempwork *.gz
 	rm -f pkg/*
@@ -16,22 +15,33 @@ clean:
 	rm -f debian/files
 	rm -rf debian/tempwork/
 
-package: clean tempwork
+.PHONY: package
+package: clean all
 	gzip -c tempwork > tempwork-$(VERSION)-$(GOOS)-$(GOARCH).gz
 
+.PHONY: deb
 deb:
-	docker run --name docker-go-pkg-build-ubuntu-trusty -v $(shell pwd):/tmp/src docker-go-pkg-build-ubuntu-trusty make -C /tmp/src deb:docker
-	docker rm docker-go-pkg-build-ubuntu-trusty
+	docker run --rm -v $(shell pwd):/tmp/src ubuntu:bionic \
+	bash -c 'apt-get update && apt-get install -y make && make -C /tmp/src deb-docker'
 
-deb\:docker: clean
-	export PATH=$$GOROOT/bin:$$PATH ; dpkg-buildpackage -us -uc
+.PHONY: deb-docker
+deb-docker: clean
+	apt-get install -y debhelper software-properties-common
+	add-apt-repository ppa:longsleep/golang-backports
+	apt update
+	apt-get install -y golang-go
+	dpkg-buildpackage -us -uc
 	mv ../tempwork_* pkg/
 
+.PHONY: rpm
 rpm:
-	docker run --name docker-go-pkg-build-centos6 -v $(shell pwd):/tmp/src docker-go-pkg-build-centos6 make -C /tmp/src rpm:docker
-	docker rm docker-go-pkg-build-centos6
+	docker run --rm -v $(shell pwd):/tmp/src centos:centos8 \
+		bash -c 'yum install -y make && make -C /tmp/src rpm-docker'
 
-rpm\:docker: clean
+.PHONY: rpm-docker
+rpm-docker: clean
+	yum install -y rpmdevtools golang
+	rpmdev-setuptree
 	cd ../ && tar zcf tempwork.tar.gz src
 	mv ../tempwork.tar.gz /root/rpmbuild/SOURCES/
 	cp tempwork.spec /root/rpmbuild/SPECS/
@@ -39,15 +49,6 @@ rpm\:docker: clean
 	mv /root/rpmbuild/RPMS/x86_64/tempwork-*.rpm pkg/
 	mv /root/rpmbuild/SRPMS/tempwork-*.src.rpm pkg/
 
-docker\:build\:ubuntu-trusty:
+.PHONY: docker-build-ubuntu
+docker-build-ubuntu:
 	docker build -f docker/Dockerfile.ubuntu-trusty -t docker-go-pkg-build-ubuntu-trusty .
-
-docker\:build\:centos6:
-	docker build -f docker/Dockerfile.centos6 -t docker-go-pkg-build-centos6 .
-
-tag:
-ifdef FORCE
-	git tag $(VERSION) -f
-else
-	git tag $(VERSION)
-endif

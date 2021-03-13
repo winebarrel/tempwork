@@ -5,4 +5,5 @@
 /debian/tempwork.substvars
 /debian/tempwork/
 /debian/files
+/debian/.debhelper
 .DS_Store
