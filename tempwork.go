@@ -95,6 +95,10 @@ func Run(tw *Tempwork) (exitCode int, err error) {
 	go func() {
 		for {
 			s := <-sig
+
+			if cmd.Process == nil {
+				continue
+			}
 			cmd.Process.Signal(s)
 		}
 	}()
